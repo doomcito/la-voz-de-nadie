@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>La Voz de Nadie - Periódico Digital Independiente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            margin: 0;
+            line-height: 1.7;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        }
+        .news-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+            position: relative;
+        }
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        .news-card img {
+            transition: transform 0.3s ease;
+        }
+        .news-card:hover img {
+            transform: scale(1.05);
+        }
+        .header-title {
+            font-weight: 800;
+            font-size: 3rem;
+            letter-spacing: -0.02em;
+            cursor: pointer;
+            user-select: none;
+        }
+        .breaking-news {
+            background: linear-gradient(45deg, #e53e3e, #fc8181);
+            animation: blink 2s infinite;
+            box-shadow: 0 4px 15px rgba(229, 62, 62, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .breaking-news:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(229, 62, 62, 0.4);
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; transform: scale(1); }
+            51%, 100% { opacity: 0.7; transform: scale(1.01); }
+        }
+        .article-details {
+            display: none;
+        }
+        .article-details.show {
+            display: block;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .article-details h2 {
+            font-size: 3.5rem; /* Increased size for subtitles/titles in redirected articles */
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .news-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+        .news-card h3:hover {
+            color: #4299e1;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        /* Comentarios */
+        #comments-section {
+            margin-top: 2rem;
+        }
+        #comments-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: #f7fafc;
+        }
+        .comment {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.5rem 0;
+        }
+        .comment:last-child {
+            border-bottom: none;
+        }
+        .comment strong {
+            color: #2b6cb0;
+        }
+        #comment-form textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        #comment-form button {
+            background-color: #3182ce;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        #comment-form button:hover {
+            background-color: #2b6cb0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="header-bg text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <h1 class="header-title text-yellow-300 drop-shadow-lg" onclick="window.location.reload();" title="Recargar página">La Voz de Nadie</h1>
+            <nav>
+                <ul class="flex space-x-6 mt-4 md:mt-0">
+                    <li><a href="#home" class="hover:text-yellow-300 transition duration-300 text-lg font-medium">Inicio</a></li>
+                    <li><a href="#noticias" class="hover:text-yellow-300 transition duration-300 text-lg font-medium">Noticias</a></li>
+                    <li><a href="#opinion" class="hover:text-yellow-300 transition duration-300 text-lg font-medium">Opinión</a></li>
+                    <li><a href="#contacto" class="hover:text-yellow-300 transition duration-300 text-lg font-medium">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="container mx-auto px-4">
+            <!-- Sección de Titulares Básicos -->
+            <section id="home" class="mb-16 text-center">
+                <h2 class="text-5xl font-bold mb-8 text-gray-800 border-b-4 border-blue-400 inline-block pb-4">Titulares del Día</h2>
+                <div class="breaking-news text-white p-6 rounded-lg shadow-md max-w-4xl mx-auto" onclick="redirectToArticle('escritura')" title="Lee la noticia completa">
+                    <p class="text-xl font-semibold">EXCLUSIVA: El blog y el manifiesto como herramientas sociales en la era digital. ¿Cómo democratizan la expresión escrita?</p>
+                    <span class="mt-2 inline-block text-sm underline">Haz clic para leer la noticia completa</span>
+                </div>
+            </section>
+
+            <!-- Artículos de Noticia -->
+            <section id="noticias" class="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div class="news-card bg-white" data-article="escritura">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/32308478-a142-4fd4-8d2a-0bb526835f6a.png" alt="Escrito abierto con páginas amarillentas llenas de texto manuscrito, una taza de café al lado, lago de fondo urbano con edificios modernos en el horizonte, ilustrando el puente entre escritura tradicional y digital en un escritorio contemporáneo con laptop visible, en estilo realista detallado con tonos cálidos" class="w-full h-48 object-cover" onerror="this.style.display='none';" />
+                    <div class="p-6">
+                        <h3 onclick="redirectToArticle('escritura')" title="Leer artículo completo" tabindex="0" onkeypress="if(event.key==='Enter'){redirectToArticle('escritura')}">La importancia de los textos escritos y digitales: El blog y el manifiesto</h3>
+                        <p class="text-gray-600 mb-4">Explorando cómo el blog y el manifiesto transforman la educación, la cultura y la sociedad en la era digital.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium" onclick="redirectToArticle('escritura'); return false;">Leer más...</a>
+                    </div>
+                </div>
+                <div class="news-card bg-white" data-article="politica">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d4926917-e7cb-40f8-9768-5d15106bd017.png" alt="Vista aérea de una ciudad urbana densa con edificios altos, calles concurridas y un cielo nublado representando el caos urbano y el ajetreo diario de la sociedad moderna, en estilo fotográfico realista con tonos grises y azules" class="w-full h-48 object-cover" onerror="this.style.display='none';" />
+                    <div class="p-6">
+                        <h3 onclick="redirectToArticle('politica')" title="Leer artículo completo" tabindex="0" onkeypress="if(event.key==='Enter'){redirectToArticle('politica')}">Política Urbana: Reflexiones desde las Sombras</h3>
+                        <p class="text-gray-600 mb-4">En una entrevista anónima, ciudadanos expresan su frustración con las políticas locales. "Nadie nos escucha", afirman.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium" onclick="redirectToArticle('politica'); return false;">Leer más...</a>
+                    </div>
+                </div>
+                <div class="news-card bg-white" data-article="sociedad">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/476fd26d-33a8-4cac-a8d9-4610c89ce768.png" alt="Grupo de personas protestando pacíficamente en una plaza histórica, con carteles hechos a mano expresando demandas sociales como justicia e igualdad, bajo un cielo soleado con hojas cayendo, en estilo ilustrativo vintage" class="w-full h-48 object-cover" onerror="this.style.display='none';" />
+                    <div class="p-6">
+                        <h3 onclick="redirectToArticle('sociedad')" title="Leer artículo completo" tabindex="0" onkeypress="if(event.key==='Enter'){redirectToArticle('sociedad')}">Sociedad Dividida: Voces Silenciadas</h3>
+                        <p class="text-gray-600 mb-4">Una indagación profunda sobre las desigualdades sociales que afectan a los invisibles de la sociedad.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium" onclick="redirectToArticle('sociedad'); return false;">Leer más...</a>
+                    </div>
+                </div>
+                <div class="news-card bg-white" data-article="economia">
+                    <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/06ba8b85-f42f-4cd3-811a-146383dc7dff.png" alt="Escena nocturna de una calle solitaria con faroles antiguos emitiendo luz tenue, y una figura humana solitaria caminando hacia la sombra, simbolizando aislamiento y misterio, en estilo pintura expresionista con colores oscuros y efectos de luz dramáticos" class="w-full h-48 object-cover" onerror="this.style.display='none';" />
+                    <div class="p-6">
+                        <h3 onclick="redirectToArticle('economia')" title="Leer artículo completo" tabindex="0" onkeypress="if(event.key==='Enter'){redirectToArticle('economia')}">Economía Oculta: El Lado Oscuro de las Finanzas</h3>
+                        <p class="text-gray-600 mb-4">Un análisis crítico sobre cómo las élites económicas influyen en el día a día de los ciudadanos comunes.</p>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 font-medium" onclick="redirectToArticle('economia'); return false;">Leer más...</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detalles de Artículos (Simulando páginas separadas) -->
+            <div id="article-details" class="article-details max-w-4xl mx-auto">
+                <button class="bg-blue-600 text-white px-6 py-3 rounded-lg mb-6 hover:bg-blue-700 transition duration-300" onclick="goBack()">Volver a Inicio</button>
+                <div id="article-content">
+                    <!-- Contenido dinámico se insertará aquí -->
+                </div>
+            </div>
+
+            <!-- Sección de Opinión -->
+            <section id="opinion" class="mt-16 bg-white p-8 rounded-xl shadow-md max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold mb-8 text-gray-800 border-l-6 border-yellow-400 pl-6">Opinión Independiente</h2>
+                <blockquote class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-400 italic text-lg">
+                    "En un mundo de ruido mediático, 'La Voz de Nadie' da voz a los sin nombre, aquellos cuyas historias importan pero quedan ignoradas. - Editor Anónimo."
+                </blockquote>
+                <p class="mt-6 text-gray-700">Aquí lanzamos debates sobre temas modernos, desde tecnología hasta justicia social, sin filtros ni intereses comerciales.</p>
+
+                <!-- Sección de comentarios -->
+                <div id="comments-section">
+                    <h3 class="text-2xl font-semibold mt-10 mb-4">Comentarios</h3>
+                    <div id="comments-list" aria-live="polite" aria-relevant="additions">
+                        <!-- Comentarios aparecerán aquí -->
+                    </div>
+                    <form id="comment-form" onsubmit="return addComment(event)">
+                        <label for="comment-input" class="sr-only">Escribe tu comentario</label>
+                        <textarea id="comment-input" name="comment" placeholder="Escribe tu comentario aquí..." required></textarea>
+                        <div class="mt-3 text-right">
+                            <button type="submit">Enviar comentario</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer id="contacto" class="header-bg text-white py-6">
+        <div class="container mx-auto text-center">
+            <p class="text-lg font-medium">© 2024 La Voz de Nadie. Todos los derechos reservados.</p>
+            <p class="text-sm mt-2">Contacto: <a href="https://x.com/alejandrxo_fe?t=CTt1DIZ43vTCVPXx64E3Rw&s=09" target="_blank" rel="noopener noreferrer" class="text-yellow-300 hover:underline">Sigue en X (Twitter)</a></p>
+            <p class="text-sm mt-2">Publicación independiente. Sin suscripciones requeridas.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Función para redirigir a "página" de artículo (mostrar detalles en la misma página sin recargar completa)
+        function redirectToArticle(articleId) {
+            document.querySelector('#noticias').style.display = 'none';
+            document.querySelector('#home').style.display = 'none';
+            document.querySelector('#opinion').style.display = 'none';
+
+            const detailsSection = document.getElementById('article-details');
+            const contentDiv = document.getElementById('article-content');
+
+            let articleContent = '';
+            switch (articleId) {
+                case 'politica':
+                    articleContent = `
+                        <h2>Política Urbana: Reflexiones desde las Sombras</h2>
+                        <p>En una entrevista anónima, ciudadanos expresan su frustración con las políticas locales. "Nadie nos escucha", afirman. El equipo de 'La Voz de Nadie' ha recopilado testimonios exclusivos que revelan las grietas en el sistema democrático. Desde corrupción en los ayuntamientos hasta políticas fiscales que benefician a unos pocos, estas voces invisibles piden cambios radicales.</p>
+                        <p>Detalle adicional: Información completa sobre reformas propuestas y análisis de impacto.</p>
+                    `;
+                    break;
+                case 'sociedad':
+                    articleContent = `
+                        <h2>Sociedad Dividida: Voces Silenciadas</h2>
+                        <p>Una indagación profunda sobre las desigualdades sociales que afectan a los invisibles de la sociedad. Historias reales recopiladas por reporteros independientes incluyen relatos de inmigrantes olvidados, trabajadores precarios y comunidades marginadas. Este artículo explora las raíces de la división social y propone soluciones basadas en empatía y justicia.</p>
+                        <p>Detalle adicional: Estadísticas actualizadas y casos de estudio.</p>
+                    `;
+                    break;
+                case 'economia':
+                    articleContent = `
+                        <h2>Economía Oculta: El Lado Oscuro de las Finanzas</h2>
+                        <p>Un análisis crítico sobre cómo las élites económicas influyen en el día a día de los ciudadanos comunes, revelado por insiders anónimos. Desde manipulación de mercados hasta evasión fiscal, este reportaje desvela los mecanismos que perpetúan la desigualdad financiera.</p>
+                        <p>Detalle adicional: Datos económicos y recomendaciones para reformas.</p>
+                    `;
+                    break;
+                case 'escritura':
+                    articleContent = `
+                        <h2>El Blog y el Manifiesto: Herramientas Sociales</h2>
+                        <p>En la actualidad, escribir ya no es solo una práctica exclusiva de expertos. Hay textos de diversos formatos, desde los blogs hasta los manifiestos políticos o artísticos, cada uno cumpliendo una función en el pensamiento de cada persona.</p>
+                        <p><em>Se explorará brevemente la importancia del blog y el manifiesto, como herramientas, para la educación, la cultura y la sociedad.</em></p>
+                        <p>El <em>blog</em> es una plataforma ideal que permite a las personas compartir sus experiencias y conocimientos. Además, al permitir comentarios, ayuda al diálogo, convirtiéndose en una herramienta que educa desde la cercanía.</p>
+                        <p>Por otro lado, el <em>manifiesto</em> es un documento en el que una persona, grupo o asociación exponen ideas generales, sobre un tema generalmente político o artístico de modo intenso. Más que comunicar, el manifiesto transforma.</p>
+                        <p>Estos formatos democratizan la expresión escrita, permitiendo a individuos ordinarios contribuir a discusiones profundas y cambiar la sociedad a través de la palabra.</p>
+                    `;
+                    break;
+                default:
+                    articleContent = `<p>Artículo no disponible.</p>`;
+            }
+
+            contentDiv.innerHTML = articleContent;
+            detailsSection.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack() {
+            document.querySelector('#noticias').style.display = 'grid';
+            document.querySelector('#home').style.display = 'block';
+            document.querySelector('#opinion').style.display = 'block';
+            document.getElementById('article-details').classList.remove('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Comentarios
+        const commentsList = document.getElementById('comments-list');
+        const commentForm = document.getElementById('comment-form');
+        const commentInput = document.getElementById('comment-input');
+
+        function addComment(event) {
+            event.preventDefault();
+            const commentText = commentInput.value.trim();
+            if (commentText === '') return false;
+
+            const commentDiv = document.createElement('div');
+            commentDiv.classList.add('comment');
+            const now = new Date();
+            const timeString = now.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+            commentDiv.innerHTML = `<strong>Anonimo</strong> <small class="text-gray-500">(${timeString})</small><p>${escapeHtml(commentText)}</p>`;
+
+            commentsList.prepend(commentDiv);
+            commentInput.value = '';
+            commentInput.focus();
+            return false;
+        }
+
+        // Escapar HTML para evitar inyección
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Script para animar el scroll a secciones al hacer clic en el menú
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        window.addEventListener('load', function() {
+            console.log('Página cargada: La Voz de Nadie está lista para explorar.');
+        });
+    </script>
+</body>
+</html>
+</content>
+</create_file>
